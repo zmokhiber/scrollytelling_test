@@ -1,0 +1,172 @@
+/* ============================================================
+   EPI Editorial Theme for Closeread Scrollytelling
+   Layout: sidebar-left (text left, sticky charts right)
+   Color palette: Navy #002a5c | Red #c21a36 | Deep blue #1a5276
+   ============================================================ */
+
+/* --- Page & Global --- */
+
+body {
+  background-color: #f9f7f4;
+  color: #2c3e50;
+}
+
+/* --- Closeread Sidebar Layout --- */
+
+.cr-section {
+  --cr-sidebar-width: 38%;
+}
+
+/* Narrative column background — subtle contrast from page */
+.cr-section .narrative-col {
+  background-color: #f4f1ec;
+  border-right: 1px solid #e8e4df;
+}
+
+/* Sticky panel (chart area) background */
+.sticky-col-stack {
+  background-color: #f9f7f4;
+}
+
+/* --- Chart Cards --- */
+
+.cr-sticky figure,
+.cr-sticky > div {
+  background: #ffffff;
+  border: 1px solid #e8e4df;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 42, 92, 0.06);
+  padding: 1.25rem 1rem 0.75rem;
+}
+
+/* Style the Observable Plot SVG inside stickies */
+.cr-sticky svg {
+  font-family: "Source Sans 3", "Source Sans Pro", system-ui, sans-serif;
+}
+
+/* Caption styling */
+.cr-sticky figcaption,
+figure[id^="cr-fig"] figcaption {
+  font-size: 0.82rem;
+  color: #7f8c8d;
+  line-height: 1.45;
+  padding: 0.5rem 0.25rem 0;
+  border-top: 1px solid #eee;
+  margin-top: 0.75rem;
+}
+
+/* --- Prose Sections (regular scrolling text between chart sections) --- */
+
+.prose-section {
+  max-width: 740px;
+  margin: 3rem auto;
+  padding: 0 1.5rem;
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #2c3e50;
+}
+
+.prose-section p {
+  margin-bottom: 1.25rem;
+}
+
+/* Prose header — title block at top of document */
+.prose-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid #002a5c;
+}
+
+.prose-header h1 {
+  font-family: "Source Serif 4", "Source Serif Pro", Georgia, serif;
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: #002a5c;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+
+.prose-byline {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  margin-top: 0.75rem;
+  letter-spacing: 0.01em;
+}
+
+/* Bold text in prose */
+.prose-section strong {
+  color: #002a5c;
+}
+
+/* Attribution footer */
+.prose-attribution {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e8e4df;
+  font-size: 0.85rem;
+  color: #7f8c8d;
+  font-style: italic;
+}
+
+/* --- Narrative Text (scroll triggers) --- */
+
+/* Style the scrolling trigger paragraphs in sidebar layout */
+.cr-section .trigger p {
+  background: #ffffff;
+  padding: 1.1rem 1.3rem;
+  border-radius: 6px;
+  border-left: 3px solid #c21a36;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+  margin-bottom: 1.25rem;
+  font-size: 1.0rem;
+  line-height: 1.7;
+  color: #2c3e50;
+}
+
+/* Bold text inside triggers uses navy */
+.cr-section .trigger p strong {
+  color: #002a5c;
+}
+
+/* --- Section Headers (full-width dividers between scrolly sections) --- */
+
+.section-header {
+  background: #002a5c;
+  color: #ffffff;
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+  margin: 0;
+  border-top: 4px solid #c21a36;
+}
+
+.section-header h2 {
+  margin: 0;
+  color: #ffffff;
+  font-family: "Source Serif 4", "Source Serif Pro", Georgia, serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* --- Scrollbar & Selection --- */
+
+::selection {
+  background: rgba(194, 26, 54, 0.15);
+}
+
+/* --- Responsive --- */
+
+@media (max-width: 768px) {
+  .cr-section {
+    --cr-sidebar-width: 100%;
+  }
+  .prose-section {
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  .prose-header h1 {
+    font-size: 1.8rem;
+  }
+}

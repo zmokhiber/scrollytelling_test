@@ -1,0 +1,12 @@
+# Quarto rendered output
+wage_stagnation.html
+wage_stagnation_files/
+
+# Source PDF (too large for git)
+*.pdf
+
+# OS / editor
+.DS_Store
+.Rhistory
+.RData
+.Rproj.user/

@@ -1,0 +1,595 @@
+---
+title: "Wage Stagnation in Nine Charts"
+format:
+  closeread-html:
+    remove-header-space: true
+    css: styles.css
+    theme: cosmo
+    include-in-header:
+      text: |
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    mainfont: "Source Sans 3"
+---
+
+```{ojs}
+//| echo: false
+
+// --- Data ---
+fig1 = FileAttachment("data/fig1.csv").csv({typed: true})
+fig2 = FileAttachment("data/fig2.csv").csv({typed: true})
+fig3 = FileAttachment("data/fig3.csv").csv({typed: true})
+fig4 = FileAttachment("data/fig4.csv").csv({typed: true})
+fig5 = FileAttachment("data/fig5.csv").csv({typed: true})
+fig6 = FileAttachment("data/fig6.csv").csv({typed: true})
+fig7 = FileAttachment("data/fig7.csv").csv({typed: true})
+fig8 = FileAttachment("data/fig8.csv").csv({typed: true})
+fig9 = FileAttachment("data/fig9.csv").csv({typed: true})
+
+// --- EPI Color Palette ---
+epi = ({
+  navy:  "#002a5c",
+  red:   "#c21a36",
+  deep:  "#1a5276",
+  blue:  "#2980b9",
+  steel: "#5d6d7e",
+  slate: "#7f8c8d",
+  gold:  "#e8c547",
+  light: "#aab7b8",
+  bg:    "#f9f7f4",
+})
+
+// --- Shared chart config ---
+chartStyle = ({
+  fontSize: "13px",
+  fontFamily: "Source Sans 3, Source Sans Pro, system-ui, sans-serif",
+  background: "transparent",
+  overflow: "visible"
+})
+
+baseChart = ({
+  width: 700,
+  height: 450,
+  marginLeft: 55,
+  marginBottom: 45,
+  style: chartStyle,
+  x: { label: null, tickFormat: "d" },
+})
+
+// Reusable mark styles
+dotStyle = ({ r: 5, stroke: "#fff", strokeWidth: 2 })
+```
+
+<!-- ============================================================ -->
+<!-- INTRODUCTION — regular scrolling prose -->
+<!-- ============================================================ -->
+
+:::{.prose-section}
+
+:::{.prose-header}
+# Wage Stagnation in Nine Charts
+
+:::{.prose-byline}
+By Lawrence Mishel, Elise Gould, and Josh Bivens | Economic Policy Institute | January 6, 2015
+:::
+:::
+
+Our country has suffered from rising income inequality and chronically slow growth in the living standards of low- and moderate-income Americans. This disappointing living-standards growth — which was in fact caused by rising income inequality — preceded the Great Recession and continues to this day. Fortunately, income inequality and middle-class living standards are now squarely on the political agenda. But despite their increasing salience, these issues are too often discussed in abstract terms. Ignored is the easy-to-understand root of rising income inequality, slow living-standards growth, and a host of other key economic challenges: the near stagnation of hourly wage growth for the vast majority of American workers over the past generation. Countering that by generating broad-based wage growth is our core economic policy challenge.
+
+With a group of simple charts, this paper brings the challenge we face into sharp focus, and lends clarity to the steps we must take to meet it.
+
+It should not be surprising that trends in hourly wage growth have profound consequences for American living standards. After all, the vast majority of Americans rely on their paychecks to make ends meet. For these families, the bulk of income comes from wages and employer-provided benefits, followed by other income sources linked to jobs, such as wage-based tax credits, pensions, and social insurance. Wage-related income also accounts for the majority of total income among the bottom fifth of households.
+
+Wage stagnation for the vast majority was not created by abstract economic trends. Rather, wages were suppressed by policy choices made on behalf of those with the most income, wealth, and power. In the past few decades, the American economy generated lots of income and wealth that would have allowed substantial living standards gains for every family. The same is true looking forward: Overall income and wealth will continue to grow. The key economic policy question is whether we will adopt policies that enable everyone to participate in a shared prosperity, or whether the growth of income and wealth will continue to accrue excessively and disproportionately to the best-off 1 percent.
+
+:::
+
+<!-- ============================================================ -->
+<!-- SECTION 1: The Cost of Inequality -->
+<!-- ============================================================ -->
+
+
+:::{.section-header}
+
+## 1. The Cost of Inequality
+:::
+
+:::{.prose-section}
+
+Rising inequality has cost the broad middle class enormously. Had income growth been shared equally since 1979, the average middle-class household would have earned nearly **$18,000** more per year by 2007.
+
+:::
+
+:::{.cr-section layout="sidebar-left"}
+
+
+
+The solid line shows **actual household income** for the middle three-fifths of Americans from 1979 to 2011. @cr-fig1a
+
+The dashed line shows what income **would have been** if growth had been shared equally — income with no change in inequality. @cr-fig1b
+
+Both lines start together in 1979 at about **$61,500** — then begin to diverge as inequality widens through the 1980s and 1990s. @cr-fig1b
+
+By **2007**, the gap had grown to **$17,867** — the difference between $76,443 in actual income and the $94,310 families would have earned without rising inequality. @cr-fig1c
+
+The Great Recession temporarily narrowed the gap as top incomes fell, but by 2011 the inequality tax still stood at nearly **$12,000**. @cr-fig1c
+
+```{ojs}
+//| echo: false
+
+// Figure 1 — progressive reveal function
+fig1Caption = "Figure 1: Household income of the broad middle class, actual and projected assuming no growth in inequality, 1979–2011. Source: EPI analysis of CBO data."
+
+function makeFig1(step) {
+  const marks = [
+    Plot.ruleY([0], {stroke: epi.light}),
+    // Step 1+: actual income line
+    Plot.line(fig1, {x: "year", y: "actual", stroke: epi.deep, strokeWidth: 2.5}),
+    Plot.text([{x: 2003, y: 67000}], {x: "x", y: "y", text: d => "Actual income", fill: epi.steel, fontSize: 11, fontStyle: "italic"}),
+  ];
+
+  // Step 2+: projected income line
+  if (step >= 2) {
+    marks.push(
+      Plot.line(fig1, {x: "year", y: "projected", stroke: epi.blue, strokeWidth: 2.5, strokeDasharray: "6,3"}),
+      Plot.text([{x: 2001, y: 88000}], {x: "x", y: "y", text: d => "Income with no\nchange in inequality", fill: epi.steel, fontSize: 11, fontStyle: "italic"})
+    );
+  }
+
+  // Step 3: area fill + gap annotations
+  if (step >= 3) {
+    marks.push(
+      Plot.areaY(fig1.filter(d => d.year >= 1985), {x: "year", y1: "actual", y2: "projected", fill: epi.red, fillOpacity: 0.07}),
+      Plot.ruleX([2007], {stroke: epi.light, strokeDasharray: "2,2"}),
+      Plot.dot(fig1.filter(d => d.year === 2007), {x: "year", y: "projected", fill: epi.blue, ...dotStyle}),
+      Plot.dot(fig1.filter(d => d.year === 2007), {x: "year", y: "actual", fill: epi.deep, ...dotStyle}),
+      Plot.text([{x: 2009, y: 96000}], {x: "x", y: "y", text: d => "$94,310", fill: epi.navy, fontWeight: "700", fontSize: 13}),
+      Plot.text([{x: 2009.5, y: 74500}], {x: "x", y: "y", text: d => "$76,443", fill: epi.navy, fontWeight: "700", fontSize: 13}),
+      Plot.text([{x: 2009, y: 86000}], {x: "x", y: "y", text: d => "$17,867\nloss", fill: epi.red, fontWeight: "700", fontSize: 13})
+    );
+  }
+
+  return Plot.plot({
+    ...baseChart,
+    marginLeft: 70,
+    y: { label: "Household income ($)", tickFormat: "$,.0f", domain: [50000, 100000] },
+    marks,
+    caption: fig1Caption
+  });
+}
+```
+
+:::{#cr-fig1a}
+```{ojs}
+//| echo: false
+makeFig1(1)
+```
+:::
+
+:::{#cr-fig1b}
+```{ojs}
+//| echo: false
+makeFig1(2)
+```
+:::
+
+:::{#cr-fig1c}
+```{ojs}
+//| echo: false
+makeFig1(3)
+```
+:::
+
+:::
+
+
+<!-- ============================================================ -->
+<!-- SECTION 2: Wage Trends -->
+<!-- ============================================================ -->
+
+:::{.section-header}
+## 2. Wage Trends
+:::
+
+:::{.cr-section layout="sidebar-left"}
+
+For most of the past generation, pay for the vast majority has lagged far behind productivity growth — and the gains that did occur were captured overwhelmingly by those at the very top. @cr-fig2a
+
+From **1948 to 1973**, productivity and compensation rose together — workers shared in the gains they helped create. Productivity climbed **96.7%** while compensation kept pace at **91.3%**. @cr-fig2a
+
+After **1973**, the lines diverge sharply. Productivity continued to climb while typical worker pay flatlined — a wedge that represents income redirected to capital owners and top earners. @cr-fig2b
+
+By 2013, productivity had risen **243%** since 1948, but hourly compensation only **109%**. The gap between those numbers is the defining economic story of the past four decades. @cr-fig2c
+
+Where did those gains go? The top **1 percent** of wage earners saw their pay grow **138%** since 1979. The bottom 90 percent? Just **15%**. @cr-fig3a
+
+The gap between the two groups widened steadily from the early 1980s onward — if wages had grown equally across the board, the bottom 90 percent would have seen **32%** growth, more than double their actual gains. @cr-fig3b
+
+Broken down by wage level, the picture is even starker. High-wage workers (95th percentile) gained **41%**, middle-wage workers gained just **6%**, and low-wage workers actually **lost 5%**. @cr-fig4
+
+```{ojs}
+//| echo: false
+
+// Figure 2 — progressive reveal function
+fig2Caption = "Figure 2: Disconnect between productivity and typical worker's compensation, 1948–2013. Source: EPI analysis of BLS and BEA data."
+
+function makeFig2(step) {
+  const marks = [
+    Plot.ruleY([0], {stroke: epi.light}),
+    Plot.ruleX([1973], {stroke: epi.slate, strokeDasharray: "4,3", strokeOpacity: 0.5}),
+    // Step 1+: both lines (the early alignment is the story)
+    Plot.line(fig2, {x: "year", y: "productivity", stroke: epi.deep, strokeWidth: 2.5}),
+    Plot.line(fig2, {x: "year", y: "compensation", stroke: epi.blue, strokeWidth: 2.5}),
+    Plot.text([{x: 2000, y: 200}], {x: "x", y: "y", text: d => "Productivity", fill: epi.deep, fontWeight: "700", fontSize: 12}),
+    Plot.text([{x: 2000, y: 120}], {x: "x", y: "y", text: d => "Hourly\ncompensation", fill: epi.blue, fontWeight: "700", fontSize: 12}),
+    Plot.text([{x: 1958, y: 80}], {x: "x", y: "y", text: d => "1948–1973:\nProductivity: Up 96.7%\nCompensation: Up 91.3%", fill: epi.steel, fontSize: 10, lineAnchor: "top"}),
+  ];
+
+  // Step 2+: post-1973 divergence annotation
+  if (step >= 2) {
+    marks.push(
+      Plot.text([{x: 1988, y: 230}], {x: "x", y: "y", text: d => "1973–2013:\nProductivity: Up 74.4%\nCompensation: Up 9.2%", fill: epi.red, fontSize: 10, fontWeight: "600", lineAnchor: "top"})
+    );
+  }
+
+  // Step 3: area fill + endpoint values
+  if (step >= 3) {
+    marks.push(
+      Plot.areaY(fig2, {x: "year", y1: "compensation", y2: "productivity", fill: epi.red, fillOpacity: 0.06}),
+      Plot.dot(fig2.filter(d => d.year === 2013), {x: "year", y: "productivity", fill: epi.deep, ...dotStyle}),
+      Plot.dot(fig2.filter(d => d.year === 2013), {x: "year", y: "compensation", fill: epi.blue, ...dotStyle}),
+      Plot.text([{x: 2013, y: 250}], {x: "x", y: "y", text: d => "243.1%", fill: epi.navy, fontWeight: "700", fontSize: 12, dx: 5, textAnchor: "start"}),
+      Plot.text([{x: 2013, y: 115}], {x: "x", y: "y", text: d => "108.9%", fill: epi.navy, fontWeight: "700", fontSize: 12, dx: 5, textAnchor: "start"})
+    );
+  }
+
+  return Plot.plot({
+    ...baseChart,
+    y: { label: "Cumulative % change since 1948", tickFormat: d => d + "%" },
+    marks,
+    caption: fig2Caption
+  });
+}
+
+// Figure 3 — progressive reveal function
+fig3Caption = "Figure 3: Cumulative change in real annual wages, by wage group, 1979–2013. Source: EPI analysis of Kopczuk, Saez, and Song (2010) and SSA data."
+
+function makeFig3(step) {
+  const marks = [
+    Plot.ruleY([0], {stroke: epi.light}),
+    // Step 1+: bottom 90% line
+    Plot.line(fig3, {x: "year", y: "bottom90", stroke: epi.blue, strokeWidth: 2.5}),
+    Plot.text([{x: 2005, y: 30}], {x: "x", y: "y", text: d => "Bottom 90%", fill: epi.blue, fontWeight: "700", fontSize: 13}),
+  ];
+
+  // Step 2+: top 1% line + area fill + endpoints
+  if (step >= 2) {
+    marks.push(
+      Plot.line(fig3, {x: "year", y: "top1", stroke: epi.deep, strokeWidth: 2.5}),
+      Plot.text([{x: 2005, y: 130}], {x: "x", y: "y", text: d => "Top 1%", fill: epi.deep, fontWeight: "700", fontSize: 13}),
+      Plot.areaY(fig3, {x: "year", y1: "bottom90", y2: "top1", fill: epi.red, fillOpacity: 0.06}),
+      Plot.dot(fig3.filter(d => d.year === 2013), {x: "year", y: "top1", fill: epi.deep, ...dotStyle}),
+      Plot.dot(fig3.filter(d => d.year === 2013), {x: "year", y: "bottom90", fill: epi.blue, ...dotStyle}),
+      Plot.text([{x: 2013, y: 143}], {x: "x", y: "y", text: d => "138%", fill: epi.navy, fontWeight: "700", fontSize: 12, dx: 5, textAnchor: "start"}),
+      Plot.text([{x: 2013, y: 20}], {x: "x", y: "y", text: d => "15%", fill: epi.navy, fontWeight: "700", fontSize: 12, dx: 5, textAnchor: "start"})
+    );
+  }
+
+  return Plot.plot({
+    ...baseChart,
+    y: { label: "Cumulative growth in real annual wages since 1979", tickFormat: d => d + "%" },
+    marks,
+    caption: fig3Caption
+  });
+}
+```
+
+:::{#cr-fig2a}
+```{ojs}
+//| echo: false
+makeFig2(1)
+```
+:::
+
+:::{#cr-fig2b}
+```{ojs}
+//| echo: false
+makeFig2(2)
+```
+:::
+
+:::{#cr-fig2c}
+```{ojs}
+//| echo: false
+makeFig2(3)
+```
+:::
+
+:::{#cr-fig3a}
+```{ojs}
+//| echo: false
+makeFig3(1)
+```
+:::
+
+:::{#cr-fig3b}
+```{ojs}
+//| echo: false
+makeFig3(2)
+```
+:::
+
+:::{#cr-fig4}
+```{ojs}
+//| echo: false
+Plot.plot({
+  ...baseChart,
+  y: { label: "Cumulative change in real hourly wages", tickFormat: d => d + "%" },
+  marks: [
+    Plot.ruleY([0], {stroke: epi.light}),
+    Plot.line(fig4, {x: "year", y: "high", stroke: epi.deep, strokeWidth: 2.5}),
+    Plot.line(fig4, {x: "year", y: "middle", stroke: epi.blue, strokeWidth: 2.5}),
+    Plot.line(fig4, {x: "year", y: "low", stroke: epi.red, strokeWidth: 2.5}),
+    Plot.text([{x: 2008, y: 45}], {x: "x", y: "y", text: d => "Very high wage\n(95th percentile)", fill: epi.deep, fontWeight: "700", fontSize: 11}),
+    Plot.text([{x: 2008, y: 12}], {x: "x", y: "y", text: d => "Middle wage\n(50th percentile)", fill: epi.blue, fontWeight: "700", fontSize: 11}),
+    Plot.text([{x: 2008, y: -11}], {x: "x", y: "y", text: d => "Low wage\n(10th percentile)", fill: epi.red, fontWeight: "700", fontSize: 11}),
+    Plot.dot(fig4.filter(d => d.year === 2013), {x: "year", y: "high", fill: epi.deep, ...dotStyle}),
+    Plot.dot(fig4.filter(d => d.year === 2013), {x: "year", y: "middle", fill: epi.blue, ...dotStyle}),
+    Plot.dot(fig4.filter(d => d.year === 2013), {x: "year", y: "low", fill: epi.red, ...dotStyle}),
+    Plot.text([{x: 2013, y: 44}], {x: "x", y: "y", text: d => "41%", fill: epi.navy, fontWeight: "700", fontSize: 12, dx: 5, textAnchor: "start"}),
+    Plot.text([{x: 2013, y: 9}], {x: "x", y: "y", text: d => "6%", fill: epi.navy, fontWeight: "700", fontSize: 12, dx: 5, textAnchor: "start"}),
+    Plot.text([{x: 2013, y: -9}], {x: "x", y: "y", text: d => "-5%", fill: epi.red, fontWeight: "700", fontSize: 12, dx: 5, textAnchor: "start"})
+  ],
+  caption: "Figure 4: Cumulative change in real hourly wages by wage percentile, 1979–2013. Source: EPI analysis of CPS data."
+})
+```
+:::
+
+:::
+
+
+<!-- ============================================================ -->
+<!-- SECTION 3: Young Workers -->
+<!-- ============================================================ -->
+
+:::{.section-header}
+## 3. Young Workers
+:::
+
+:::{.cr-section layout="sidebar-left"}
+
+A college degree has been no shield against wage stagnation. Since the late 1990s, real wages for young graduates have fallen, and employer-provided benefits like health insurance have eroded sharply — even for the most educated workers. @cr-fig5
+
+Wages for young college graduates peaked in the **late 1990s** then declined. By 2013, all three groups — men, women, and overall — earned less in real terms than they did over a decade earlier. @cr-fig5
+
+Young men with degrees earned **$19.15/hour** in 2014, women **$15.29**, and the overall average was **$16.99** — all below their late-1990s peaks. Education alone cannot explain wage stagnation. @cr-fig5
+
+The erosion extends to benefits. The share of young college graduates with employer health insurance fell from **61%** in 1989 to just **31%** by 2012. @cr-fig6
+
+For high-school graduates, it's even bleaker: coverage plummeted from **24%** to just **7%** over the same period. @cr-fig6
+
+:::{#cr-fig5}
+```{ojs}
+//| echo: false
+Plot.plot({
+  ...baseChart,
+  y: { label: "Average hourly wages (2013 dollars)", tickFormat: d => "$" + d, domain: [14, 22] },
+  marks: [
+    Plot.ruleX([2000], {stroke: epi.light, strokeDasharray: "3,3"}),
+    Plot.line(fig5, {x: "year", y: "men", stroke: epi.deep, strokeWidth: 2.5}),
+    Plot.line(fig5, {x: "year", y: "all", stroke: epi.red, strokeWidth: 2.5}),
+    Plot.line(fig5, {x: "year", y: "women", stroke: epi.blue, strokeWidth: 2.5}),
+    Plot.text([{x: 2003, y: 20.5}], {x: "x", y: "y", text: d => "Men", fill: epi.deep, fontWeight: "700", fontSize: 12}),
+    Plot.text([{x: 2000, y: 18.8}], {x: "x", y: "y", text: d => "All", fill: epi.red, fontWeight: "700", fontSize: 12}),
+    Plot.text([{x: 2000, y: 17.2}], {x: "x", y: "y", text: d => "Women", fill: epi.blue, fontWeight: "700", fontSize: 12}),
+    Plot.dot(fig5.filter(d => d.year === 2013), {x: "year", y: "men", fill: epi.deep, ...dotStyle}),
+    Plot.dot(fig5.filter(d => d.year === 2013), {x: "year", y: "all", fill: epi.red, ...dotStyle}),
+    Plot.dot(fig5.filter(d => d.year === 2013), {x: "year", y: "women", fill: epi.blue, ...dotStyle})
+  ],
+  caption: "Figure 5: Real average hourly wages of young college graduates, 1989–2014. Source: EPI analysis of CPS data."
+})
+```
+:::
+
+:::{#cr-fig6}
+```{ojs}
+//| echo: false
+Plot.plot({
+  ...baseChart,
+  y: { label: "Share with employer-provided health insurance (%)", tickFormat: d => d + "%", domain: [0, 80] },
+  marks: [
+    Plot.ruleY([0], {stroke: epi.light}),
+    Plot.line(fig6, {x: "year", y: "college", stroke: epi.deep, strokeWidth: 2.5}),
+    Plot.line(fig6, {x: "year", y: "high_school", stroke: epi.blue, strokeWidth: 2.5, strokeDasharray: "4,3"}),
+    Plot.text([{x: 1994, y: 58}], {x: "x", y: "y", text: d => "College\ngraduates", fill: epi.deep, fontWeight: "700", fontSize: 12}),
+    Plot.text([{x: 1995, y: 24}], {x: "x", y: "y", text: d => "High school\ngraduates", fill: epi.blue, fontWeight: "700", fontSize: 12}),
+    Plot.dot(fig6.filter(d => d.year === 2012), {x: "year", y: "college", fill: epi.deep, ...dotStyle}),
+    Plot.dot(fig6.filter(d => d.year === 2012), {x: "year", y: "high_school", fill: epi.blue, ...dotStyle}),
+    Plot.text([{x: 2012, y: 34}], {x: "x", y: "y", text: d => "31%", fill: epi.navy, fontWeight: "700", fontSize: 12, dx: 8, textAnchor: "start"}),
+    Plot.text([{x: 2012, y: 10}], {x: "x", y: "y", text: d => "7%", fill: epi.red, fontWeight: "700", fontSize: 12, dx: 8, textAnchor: "start"})
+  ],
+  caption: "Figure 6: Share of employed young graduates with employer-provided health insurance, 1989–2012. Source: EPI analysis of CPS ASEC data."
+})
+```
+:::
+
+:::
+
+
+<!-- ============================================================ -->
+<!-- SECTION 4: Drivers of Inequality -->
+<!-- ============================================================ -->
+
+:::{.section-header}
+## 4. Drivers of Inequality
+:::
+
+:::{.cr-section layout="sidebar-left"}
+
+Wage stagnation was not inevitable — it was driven by specific policy choices: exploding CEO pay, a collapsing minimum wage, and the erosion of collective bargaining. These three forces redirected the gains of a growing economy away from the workers who created them. @cr-fig7
+
+In **1965**, CEOs earned **20 times** a typical worker's pay. By 2000, that ratio peaked at **383-to-1**, settling at **296-to-1** in 2013. @cr-fig7
+
+The explosion of CEO pay is not tied to performance — it grew three times faster than even the top 0.1% of earners, and twice as fast as corporate profits. @cr-fig7
+
+Had the minimum wage kept pace with productivity since 1968, it would be over **$18** today — instead of **$7.25**. Even tracking the typical worker's hourly wage would put it near **$11**. @cr-fig8
+
+The divergence between the three lines — minimum wage, typical wage, and productivity — shows how policy choices have allowed the floor to collapse even as the economy grew. @cr-fig8
+
+The decline in union membership since the mid-20th century is almost a perfect mirror of the rise in income going to the top 10%. @cr-fig9
+
+As collective bargaining eroded, so did the mechanism that once ensured workers shared in the economy's gains — explaining one-fourth to one-third of rising wage inequality. @cr-fig9
+
+:::{#cr-fig7}
+```{ojs}
+//| echo: false
+Plot.plot({
+  ...baseChart,
+  y: { label: "CEO-to-worker compensation ratio", domain: [0, 420] },
+  marks: [
+    Plot.ruleY([0], {stroke: epi.light}),
+    Plot.areaY(fig7, {x: "year", y: "ratio", fill: epi.deep, fillOpacity: 0.08}),
+    Plot.line(fig7, {x: "year", y: "ratio", stroke: epi.deep, strokeWidth: 2.5}),
+    Plot.dot(fig7.filter(d => [1965, 1978, 1989, 1995, 2000, 2007, 2013].includes(d.year)),
+      {x: "year", y: "ratio", fill: epi.deep, ...dotStyle}),
+    Plot.text([{x: 1967, y: 35}], {x: "x", y: "y", text: d => "20", fill: epi.steel, fontWeight: "700", fontSize: 11}),
+    Plot.text([{x: 1980, y: 45}], {x: "x", y: "y", text: d => "30", fill: epi.steel, fontWeight: "700", fontSize: 11}),
+    Plot.text([{x: 2000, y: 400}], {x: "x", y: "y", text: d => "383", fill: epi.navy, fontWeight: "700", fontSize: 11}),
+    Plot.text([{x: 2013, y: 310}], {x: "x", y: "y", text: d => "296", fill: epi.red, fontWeight: "700", fontSize: 13})
+  ],
+  caption: "Figure 7: CEO-to-worker compensation ratio, 1965–2013. Source: EPI analysis of Compustat, BLS, and BEA data."
+})
+```
+:::
+
+:::{#cr-fig8}
+```{ojs}
+//| echo: false
+Plot.plot({
+  ...baseChart,
+  y: { label: "2014 dollars", tickFormat: d => "$" + d, domain: [4, 20] },
+  marks: [
+    Plot.line(fig8, {x: "year", y: "productivity", stroke: epi.blue, strokeWidth: 2.5}),
+    Plot.line(fig8, {x: "year", y: "hourly_wage", stroke: epi.deep, strokeWidth: 2.5}),
+    Plot.line(fig8, {x: "year", y: "min_wage", stroke: epi.red, strokeWidth: 2.5}),
+    Plot.text([{x: 2002, y: 16}], {x: "x", y: "y", text: d => "Productivity", fill: epi.blue, fontWeight: "700", fontSize: 11}),
+    Plot.text([{x: 2003, y: 11.5}], {x: "x", y: "y", text: d => "Real hourly wage\nof typical worker", fill: epi.deep, fontWeight: "700", fontSize: 11}),
+    Plot.text([{x: 1993, y: 6}], {x: "x", y: "y", text: d => "Real minimum wage", fill: epi.red, fontWeight: "700", fontSize: 11}),
+    Plot.dot(fig8.filter(d => d.year === 2014), {x: "year", y: "productivity", fill: epi.blue, ...dotStyle}),
+    Plot.dot(fig8.filter(d => d.year === 2014), {x: "year", y: "hourly_wage", fill: epi.deep, ...dotStyle}),
+    Plot.dot(fig8.filter(d => d.year === 2014), {x: "year", y: "min_wage", fill: epi.red, ...dotStyle}),
+    Plot.text([{x: 2014, y: 19}], {x: "x", y: "y", text: d => "$18.42", fill: epi.navy, fontWeight: "700", fontSize: 12, dx: 5, textAnchor: "start"}),
+    Plot.text([{x: 2014, y: 11.4}], {x: "x", y: "y", text: d => "$10.89", fill: epi.navy, fontWeight: "700", fontSize: 12, dx: 5, textAnchor: "start"}),
+    Plot.text([{x: 2014, y: 7.8}], {x: "x", y: "y", text: d => "$7.25", fill: epi.red, fontWeight: "700", fontSize: 12, dx: 5, textAnchor: "start"})
+  ],
+  caption: "Figure 8: Real value of the federal minimum wage compared with productivity and average hourly wages, 1968–2014. Source: EPI analysis of BLS data."
+})
+```
+:::
+
+:::{#cr-fig9}
+```{ojs}
+//| echo: false
+
+// Figure 9 uses dual y-axes via D3
+{
+  const w = baseChart.width, h = baseChart.height, ml = 55, mr = 55, mt = 20, mb = 45;
+
+  const xExtent = d3.extent(fig9, d => d.year);
+  const x = d3.scaleLinear().domain(xExtent).range([ml, w - mr]);
+  const y = d3.scaleLinear().domain([0, 60]).range([h - mb, mt]);
+
+  const svg = d3.create("svg")
+    .attr("viewBox", [0, 0, w, h])
+    .attr("width", w)
+    .attr("height", h)
+    .style("font-family", chartStyle.fontFamily)
+    .style("background", "transparent");
+
+  // Grid lines
+  for (const tick of [0, 10, 20, 30, 40, 50, 60]) {
+    svg.append("line")
+      .attr("x1", ml).attr("x2", w - mr)
+      .attr("y1", y(tick)).attr("y2", y(tick))
+      .attr("stroke", epi.light).attr("stroke-opacity", 0.5);
+  }
+
+  // X axis
+  [1920, 1940, 1960, 1980, 2000].forEach(t => {
+    svg.append("text").attr("x", x(t)).attr("y", h - mb + 20)
+      .attr("text-anchor", "middle").attr("font-size", 12).attr("fill", epi.steel).text(t);
+  });
+
+  // Y axis left (union membership)
+  [0, 10, 20, 30, 40, 50, 60].forEach(t => {
+    svg.append("text").attr("x", ml - 8).attr("y", y(t) + 4)
+      .attr("text-anchor", "end").attr("font-size", 11).attr("fill", epi.blue).text(t + "%");
+  });
+
+  // Y axis right (top 10% income share)
+  [0, 10, 20, 30, 40, 50, 60].forEach(t => {
+    svg.append("text").attr("x", w - mr + 8).attr("y", y(t) + 4)
+      .attr("text-anchor", "start").attr("font-size", 11).attr("fill", epi.deep).text(t + "%");
+  });
+
+  // Area fills
+  const unionArea = d3.area().x(d => x(d.year)).y0(h - mb).y1(d => y(d.union));
+  const incomeArea = d3.area().x(d => x(d.year)).y0(h - mb).y1(d => y(d.top_income));
+  svg.append("path").datum(fig9)
+    .attr("d", unionArea).attr("fill", epi.blue).attr("fill-opacity", 0.06);
+  svg.append("path").datum(fig9)
+    .attr("d", incomeArea).attr("fill", epi.deep).attr("fill-opacity", 0.06);
+
+  // Lines
+  const unionLine = d3.line().x(d => x(d.year)).y(d => y(d.union));
+  const incomeLine = d3.line().x(d => x(d.year)).y(d => y(d.top_income));
+
+  svg.append("path").datum(fig9)
+    .attr("d", unionLine).attr("fill", "none").attr("stroke", epi.blue).attr("stroke-width", 2.5);
+  svg.append("path").datum(fig9)
+    .attr("d", incomeLine).attr("fill", "none").attr("stroke", epi.deep).attr("stroke-width", 2.5);
+
+  // Labels
+  svg.append("text").attr("x", x(1984)).attr("y", y(10))
+    .attr("fill", epi.blue).attr("font-weight", "700").attr("font-size", 12)
+    .text("Union membership share");
+  svg.append("text").attr("x", x(1990)).attr("y", y(51))
+    .attr("fill", epi.deep).attr("font-weight", "700").attr("font-size", 12)
+    .text("Share of income going");
+  svg.append("text").attr("x", x(1990)).attr("y", y(51) + 15)
+    .attr("fill", epi.deep).attr("font-weight", "700").attr("font-size", 12)
+    .text("to the top 10 percent");
+
+  // Caption
+  svg.append("text").attr("x", ml).attr("y", h - 2)
+    .attr("font-size", 10).attr("fill", epi.slate)
+    .text("Figure 9: Union membership and share of income going to the top 10%, 1917–2012. Source: EPI.");
+
+  return svg.node();
+}
+```
+:::
+
+:::
+
+
+<!-- ============================================================ -->
+<!-- CONCLUSION — regular scrolling prose -->
+<!-- ============================================================ -->
+
+:::{.prose-section}
+
+## What can be done
+
+The first policy choice should be to quickly restore full employment. The Federal Reserve Board can do this by not raising interest rates and slowing the recovery in the name of fighting inflationary pressures until wage growth is much, much stronger. Congress and the president can pursue the return to full employment by making public investments that can create both jobs and future productivity growth.
+
+After this, policymakers should support those labor standards that can restore some bargaining power to low- and moderate-wage workers in coming years. That means policy actions such as passing a higher minimum wage, expanding rights to overtime pay, providing paid sick leave, protecting the labor rights of undocumented workers, and restoring the right to collective bargaining. Policymakers should reject trade treaties that provide corporations greater rights and sap our manufacturing job base.
+
+These nine charts make clear that wage stagnation is not inevitable — it is the result of policy choices, and it can be reversed by different policy choices.
+
+:::{.prose-attribution}
+Based on "Wage Stagnation in Nine Charts" by Lawrence Mishel, Elise Gould, and Josh Bivens | Economic Policy Institute, January 6, 2015
+:::
+
+:::
