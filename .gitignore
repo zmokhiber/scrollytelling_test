@@ -1,4 +1,4 @@
-# Quarto rendered output
+# Quarto rendered output (root level, not docs/)
 wage_stagnation.html
 wage_stagnation_files/
 
@@ -10,3 +10,5 @@ wage_stagnation_files/
 .Rhistory
 .RData
 .Rproj.user/
+
+/.quarto/

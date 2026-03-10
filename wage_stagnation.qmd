@@ -1,5 +1,6 @@
 ---
 title: "Wage Stagnation in Nine Charts"
+output-dir: docs
 format:
   closeread-html:
     remove-header-space: true
