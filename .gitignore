@@ -1,6 +1,6 @@
 # Quarto rendered output (root level, not docs/)
-wage_stagnation.html
-wage_stagnation_files/
+/wage_stagnation.html
+/wage_stagnation_files/
 
 # Source PDF (too large for git)
 *.pdf
